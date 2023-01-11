@@ -56,7 +56,7 @@ final class AnySectionDataController<A: Updating> {
 }
 
 /// DataSource for a section
-public final class SectionDataController<T: Differentiable, A: Updating>: SectionDataControllerType where A.Element == T {
+public final class SectionDataController<T: Differentiable, A: Updating>: SectionDataControllerType {
 
   public typealias ItemType = T
   public typealias AdapterType = A
