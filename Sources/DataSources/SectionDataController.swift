@@ -10,7 +10,7 @@ import Foundation
 
 import DifferenceKit
 
-public protocol SectionDataControllerType where AdapterType.Element == ItemType {
+public protocol SectionDataControllerType {
 
   associatedtype ItemType : Differentiable
   associatedtype AdapterType : Updating
@@ -21,7 +21,7 @@ public protocol SectionDataControllerType where AdapterType.Element == ItemType 
 }
 
 /// Type of Model erased SectionDataController
-public final class AnySectionDataController<A: Updating> {
+final class AnySectionDataController<A: Updating> {
 
   let source: Any
 
@@ -263,27 +263,25 @@ public final class SectionDataController<T: Differentiable, A: Updating>: Sectio
         )
 
         _adapter.performBatch(
-          in: updateContext,
           animated: animated,
           updates: {
 
             if !changeset.elementDeleted.isEmpty {
-              _adapter.deleteItems(at: updateContext.diff.deletes, in: updateContext)
+              _adapter.deleteItems(at: updateContext.diff.deletes)
             }
 
             if !changeset.elementInserted.isEmpty {
-              _adapter.insertItems(at: updateContext.diff.inserts, in: updateContext)
+              _adapter.insertItems(at: updateContext.diff.inserts)
             }
 
             if !changeset.elementUpdated.isEmpty {
-              _adapter.reloadItems(at: updateContext.diff.updates, in: updateContext)
+              _adapter.reloadItems(at: updateContext.diff.updates)
             }
 
             for move in updateContext.diff.moves {
               _adapter.moveItem(
                 at: move.from,
-                to: move.to,
-                in: updateContext
+                to: move.to
               )
             }
         },
