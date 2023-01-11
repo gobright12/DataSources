@@ -87,7 +87,7 @@ public final class DataController<A: Updating> {
     let _section = sectionDataControllers.count
     section.state = .added(at: _section)
 
-    let source = SectionDataController<T, A>(adapter: adapter, displayingSection: _section, isEqual: section.isEqual)
+    let source = SectionDataController<T, A>(adapter: adapter, displayingSection: _section)
     precondition(sectionDataControllers[_section] == nil, "Duplicated section \(_section)")
 
     if _section > 0 {
