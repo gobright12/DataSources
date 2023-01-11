@@ -79,8 +79,6 @@ public final class SectionDataController<T: Differentiable, A: Updating>: Sectio
 
   private var state: State = .idle
 
-  private let throttle = Throttle(interval: 0.1)
-
   private let adapter: AdapterType
 
   public internal(set) var displayingSection: Int
@@ -178,12 +176,11 @@ public final class SectionDataController<T: Differentiable, A: Updating>: Sectio
     }
 
     if immediately {
-      throttle.cancel()
       task()
     } else {
-      throttle.on {
+      DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 0.1, execute: {
         task()
-      }
+      })
     }
   }
 
