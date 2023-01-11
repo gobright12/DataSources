@@ -21,7 +21,7 @@ public protocol SectionDataControllerType where AdapterType.Element == ItemType 
 }
 
 /// Type of Model erased SectionDataController
-final class AnySectionDataController<A: Updating> {
+public final class AnySectionDataController<A: Updating> {
 
   let source: Any
 
