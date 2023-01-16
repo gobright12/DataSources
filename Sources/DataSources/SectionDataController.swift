@@ -236,6 +236,7 @@ public final class SectionDataController<T: Differentiable, A: Updating>: Sectio
             let totalChangeCount = stagedChangeset.map { $0.changeCount }.reduce(0, +)
             
             guard totalChangeCount > 0 else {
+                self.state = .idle
                 completion()
                 return
             }
@@ -250,22 +251,17 @@ public final class SectionDataController<T: Differentiable, A: Updating>: Sectio
             
             let _adapter = self.adapter
             
-            let group = DispatchGroup()
-            
-            for changeset in stagedChangeset {
-                
-                group.enter()
-                
-                self.snapshot = changeset.data
-                
-                let updateContext = UpdateContext.init(
-                    diff: .init(diff: changeset, targetSection: targetSection),
-                    snapshot: changeset.data
-                )
-                
-                _adapter.performBatch(
-                    animated: animated,
-                    updates: {
+            _adapter.performBatch(
+                animated: animated,
+                updates: {
+                    for changeset in stagedChangeset {
+                        
+                        self.snapshot = changeset.data
+                        
+                        let updateContext = UpdateContext.init(
+                            diff: .init(diff: changeset, targetSection: targetSection),
+                            snapshot: changeset.data
+                        )
                         
                         if !changeset.elementDeleted.isEmpty {
                             _adapter.deleteItems(at: updateContext.diff.deletes)
@@ -285,20 +281,14 @@ public final class SectionDataController<T: Differentiable, A: Updating>: Sectio
                                 to: move.to
                             )
                         }
-                    },
-                    completion: {
-                        assertMainThread()
-                        
-                        group.leave()
-                        
-                    })
-            }
-            
-            group.notify(queue: .main) {
-                self.state = .idle
-                completion()
-            }
-            
+                    }
+                },
+                completion: {
+                    assertMainThread()
+                    self.state = .idle
+                    completion()
+                }
+            )
         }
     }
     
