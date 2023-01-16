@@ -181,7 +181,8 @@ public final class SectionDataController<T: Differentiable, A: Updating>: Sectio
         if immediately {
             work!.perform()
         } else {
-            DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 0.1, execute: work!)
+            work!.perform()
+//            DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 0.1, execute: work!)
         }
     }
     
